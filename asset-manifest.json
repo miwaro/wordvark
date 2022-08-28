@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/wordvark/static/css/main.2901091f.css",
-    "main.js": "/wordvark/static/js/main.ff5e2e18.js",
+    "main.css": "/wordvark/static/css/main.89d32c51.css",
+    "main.js": "/wordvark/static/js/main.7f5bc178.js",
     "static/js/787.cbf2abfe.chunk.js": "/wordvark/static/js/787.cbf2abfe.chunk.js",
     "index.html": "/wordvark/index.html",
-    "main.2901091f.css.map": "/wordvark/static/css/main.2901091f.css.map",
-    "main.ff5e2e18.js.map": "/wordvark/static/js/main.ff5e2e18.js.map",
+    "main.89d32c51.css.map": "/wordvark/static/css/main.89d32c51.css.map",
+    "main.7f5bc178.js.map": "/wordvark/static/js/main.7f5bc178.js.map",
     "787.cbf2abfe.chunk.js.map": "/wordvark/static/js/787.cbf2abfe.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2901091f.css",
-    "static/js/main.ff5e2e18.js"
+    "static/css/main.89d32c51.css",
+    "static/js/main.7f5bc178.js"
   ]
 }
