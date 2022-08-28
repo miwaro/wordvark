@@ -182,6 +182,24 @@ td {
   100% { opacity: 0; }
 }
 
+@media screen and (max-width: 700px) {
+  input {
+    width: 170px;
+
+  }
+  input,
+input::placeholder {
+    font: 12px/2 sans-serif;
+} 
+
+.left-input {
+  font-size: 30px;
+}
+
+.right-input {
+  font-size: 30px;
+}
+}
 
 
 
