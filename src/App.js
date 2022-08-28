@@ -28,6 +28,7 @@ function App() {
   const [gameIsOver, setGameIsOver] = useState(null);
   const [streak, setStreak] = useState(0);
   const [longestStreak, setLongestStreak] = useState([]);
+  const [noStrikeBonusMessage, setNoStrikeBonusMessage] = useState("");
 
   // const [flexDirection, setFlexDirection] = useState("column");
   const inputRef = useRef(null);
@@ -110,6 +111,7 @@ function App() {
 
   useEffect(() => {
     if (gameIsOver && strikes.length === 0) {
+      setNoStrikeBonusMessage("No-Strike Bonus!")
       setScore(prev => prev + 3)
       setAddedScore(3)
     }
@@ -147,6 +149,8 @@ function App() {
     setScore(0)
     setJoinedWords([])
     setLongestStreak([]);
+    setNoStrikeBonusMessage("")
+
   }
 
   useEffect(() => {
@@ -206,7 +210,6 @@ function App() {
           {
             showScore && !isLoading ?
               <span style={{ position: 'absolute' }} className="added-score">+{addedScore}</span> : <span style={{ visibility: 'hidden' }}></span>
-
           }
           <button
             className="hidden-btn"
@@ -217,7 +220,7 @@ function App() {
           {strikes.length === 3 || gameIsOver ?
             <input
               className="right-input"
-              placeholder="Game Over"
+              placeholder="Press Enter to Submit or Skip"
               value={rightInput}
               readOnly
             /> :
@@ -230,20 +233,20 @@ function App() {
               onKeyPress={onKeyPress}
             />
           }
-
           <div style={{ position: 'absolute' }}>
             {isLoading ? <LoadingSpinner /> : <div style={{ visibility: 'hidden' }}>Hi</div>}
           </div>
           <button className="hidden-btn" onClick={getRandomWord}>Next</button>
         </form>
+        {gameIsOver && showScore &&
+          <span className='added-score'>{noStrikeBonusMessage}</span>
+        }
         <div className='score'>SCORE: <span style={{ color: 'white' }}>{score}</span></div>
         {gameIsOver &&
           <WordStats joinedWords={joinedWords} longestStreak={longestStreak} strikes={strikes} gameIsOver={gameIsOver} />
 
         }
-
-
-        <div style={{ width: '700px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           {gameIsOver && joinedWords.length > 0 &&
             <div className="word-container">
               <div className="word" style={{ fontWeight: 'bold' }}>Words:</div>
@@ -255,10 +258,6 @@ function App() {
             </div>
           }
         </div>
-
-
-
-
         <div className='strike-container'>
           {
             strikes.map((strike) => (

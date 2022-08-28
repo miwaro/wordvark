@@ -48,11 +48,13 @@ export default function CountdownApp({
             setFinalScore(score);
             const hiScore = localStorage.getItem('HI-SCORE')
             if (score > hiScore) {
-                alert("Congratulations on your new high score!")
+                // setTimeout(() => {
+                //     alert("Congratulations on your new high score!")
+                // }, 1000)
                 localStorage.setItem('HI-SCORE', JSON.stringify(score));
             }
         }
-    }, [secondsRemaining])
+    }, [secondsRemaining, score])
 
     useEffect(() => {
         if (secondsRemaining === 0) {
