@@ -201,6 +201,30 @@ input::placeholder {
 }
 }
 
+@media screen and (max-width: 500px) {
+  input {
+    width: 130px;
+
+  }
+  input,
+  input::placeholder {
+      font: 9px/2 sans-serif;
+  } 
+
+.left-input {
+  font-size: 24px;
+}
+
+.hi-score {
+  padding: 10px;
+  margin: 0px;
+}
+
+.right-input {
+  font-size: 24px;
+}
+}
+
 
 
 
