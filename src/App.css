@@ -10,7 +10,7 @@ html {
 }
 
 .content-container {
-  margin-top: 100px;
+  margin-top: 50px;
   height: 94vh;
 }
 
@@ -73,14 +73,18 @@ html {
   font-size: 16px;
 }
 
+form input[type="text"] {
+  text-transform: lowercase;
+}
+
 input {
   width: 300px;
   margin: 20px;
   color:rgb(59, 59, 188);
   background-color: whitesmoke;
   border-radius: 10px;
-  border: none;
-  box-shadow: 6px 6px 2px 1px rgba(59, 59, 188, .2);
+  /* border: none; */
+  /* box-shadow: 6px 6px 2px 1px rgba(59, 59, 188, .2); */
 } 
 
 input,
@@ -92,14 +96,29 @@ input::placeholder {
   text-align: right;
   font-size: 40px;
   padding-right: 10px;
-  outline: none;
-
+  /* outline: none; */
 }
 
 .right-input {
   padding-left: 10px;
   font-size: 40px;
-  outline: none;
+  /* outline: none; */
+}
+
+.error-input {
+  padding-left: 10px;
+  font-size: 40px;
+  color: red;
+  outline-color: red;
+}
+
+.shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+  box-shadow: 0 0 0.5em red;
+  padding-left: 10px;
+  font-size: 40px;
+  color: red;
+  outline-color: red;
 }
 
 .score {
@@ -182,10 +201,43 @@ td {
   100% { opacity: 0; }
 }
 
-@media screen and (max-width: 700px) {
+@keyframes shake {
+  0% { margin-left: 0rem; }
+  25% { margin-left: 0.5rem; }
+  75% { margin-left: -0.5rem; }
+  100% { margin-left: 0rem; }
+}
+
+@media screen and (max-width: 768px) {
+
+  .added-score {
+    /* animation: fadeIn 2s linear; */
+    color: rgb(65, 188, 59);
+    /* font-size: 20px; */
+    /* font-weight: bold; */
+  }
+
+  .App-header {
+    font-size: 40px;
+  }
+
+  .hidden-btn {
+    display: block;
+    transition: all .4s;
+    padding: 12px 0;
+    width: 50px;
+    font-size: 16px;
+    color: white;
+    background-color: rgb(68, 68, 207);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
   input {
     width: 170px;
-
+    margin: 5px;
+    box-shadow: none;
   }
   input,
 input::placeholder {

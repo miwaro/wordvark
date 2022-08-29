@@ -6,9 +6,6 @@ import Timer from './components/Timer';
 import WordStats from './components/WordStats';
 import LoadingSpinner from "./components/DelayedSpinner";
 import aardvark from './assets/img/AARD.png';
-// import ReactCSSTransitionGroup from 'react-transition-group';
-
-
 import './App.css';
 
 function App() {
@@ -28,14 +25,12 @@ function App() {
   const [gameIsOver, setGameIsOver] = useState(null);
   const [streak, setStreak] = useState(0);
   const [longestStreak, setLongestStreak] = useState([]);
+  const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
   const [noStrikeBonusMessage, setNoStrikeBonusMessage] = useState("");
+  const [inputClass, setInputClass] = useState("");
 
   // const [flexDirection, setFlexDirection] = useState("column");
   const inputRef = useRef(null);
-
-  // useEffect(() => {
-
-  // }, [isLoading]);
 
   useEffect(() => {
     const hiScore = localStorage.getItem('HI-SCORE')
@@ -56,9 +51,9 @@ function App() {
     setStreak(0)
     setEditing(true);
     let word = randomWords();
-    // while (word.length <= 1) {
-    //   word = randomWords();
-    // }
+    while (word.length <= 1) {
+      word = randomWords();
+    }
     let firstTwo = word.slice(0, 2);
     setLeftInput(firstTwo);
     // setLeftInput(word);
@@ -71,13 +66,9 @@ function App() {
   }, [isEditing]);
 
   useEffect(() => {
+    // setIsAlreadyUsed(false);
     if (!leftInput || testWord === "") return;
-
-
     setIsLoading(true);
-
-
-
     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${testWord}/`;
     axios.get(url)
       .then(response => {
@@ -92,8 +83,8 @@ function App() {
         // Easter Egg
         if (testWord === "wordvark") {
           setJoinedWords(prev => [...prev, testWord])
-          setLeftInput(testWord)
-          setStreak(prev => prev + 10)
+          getRandomWord();
+          setStreak(prev => prev + 5)
         } else {
           if (!testWord) return;
           setRejectedWords(prev => [...prev, testWord]);
@@ -103,7 +94,6 @@ function App() {
           setStrikes(prev => [...prev, '❌'])
         }
         setIsLoading(false)
-
 
       });
 
@@ -118,6 +108,7 @@ function App() {
   }, [gameIsOver])
 
   useEffect(() => {
+
     setLongestStreak(prev => [...prev, streak])
     if (joinedWords.length === 0 || streak === 0) return;
     let power = streak - 1
@@ -128,12 +119,37 @@ function App() {
 
   const handleChangeRightInput = (e) => {
     e.preventDefault();
+    let joinedWord = `${leftInput}${e.target.value}`;
+    const newRepeats = [];
+
+    if (joinedWords.length > 0) {
+      joinedWords.forEach(word => {
+        if (joinedWord === word) {
+          newRepeats.push(word)
+        }
+      })
+    }
+
+    if (joinedWords.includes(newRepeats[0])) {
+      setIsAlreadyUsed(true)
+    } else {
+      setIsAlreadyUsed(false)
+
+    }
+
+    console.log('newRepeats', newRepeats)
+
     setRightInput(e.target.value)
     setRightInputExists(true)
   }
 
   const onKeyPress = (e) => {
-    if (gameIsOver || gameIsOver === null) return;
+    console.log('all ready used', isAlreadyUsed)
+
+    if (isAlreadyUsed) {
+      setInputClass("shake")
+    } else setInputClass("");
+    if (gameIsOver || gameIsOver === null || isAlreadyUsed) return;
     if (e.which === 13 && rightInput === "") {
       getRandomWord()
       setStreak(0)
@@ -150,20 +166,18 @@ function App() {
     setJoinedWords([])
     setLongestStreak([]);
     setNoStrikeBonusMessage("")
-
   }
 
   useEffect(() => {
     if (strikes.length === 3) {
       setGameIsOver(true)
     }
-
   }, [strikes])
 
   const handleJoinWord = (e) => {
-
     e.preventDefault();
-    if (gameIsOver === null || isLoading || gameIsOver === true) return;
+    setEditing(true);
+    if (gameIsOver === null || isLoading || gameIsOver === true || isAlreadyUsed) return;
 
     if (e.key === 'Enter' && rightInput === "") {
       getRandomWord();
@@ -175,8 +189,10 @@ function App() {
     setTestWord(joinedWord.toLowerCase())
     setRightInput("")
     setRightInputExists(false)
+
   }
 
+  const rightInputClasses = isAlreadyUsed ? `error-input ${inputClass}` : "right-input"
 
   return (
     <div className="App">
@@ -225,7 +241,7 @@ function App() {
               readOnly
             /> :
             <input
-              className="right-input"
+              className={rightInputClasses}
               placeholder="Press Enter to Submit or Skip"
               ref={inputRef} type="text"
               value={rightInput}
@@ -248,7 +264,8 @@ function App() {
         }
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           {gameIsOver && joinedWords.length > 0 &&
-            <div className="word-container">
+            <div className='word-container'>
+
               <div className="word" style={{ fontWeight: 'bold' }}>Words:</div>
               {
                 joinedWords.map((words) => (
