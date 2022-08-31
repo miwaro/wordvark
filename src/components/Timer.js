@@ -6,7 +6,7 @@ const STATUS = {
     STOPPED: 'Stopped',
 }
 
-const INITIAL_COUNT = 8
+const INITIAL_COUNT = 60
 
 export default function CountdownApp({
     getRandomWord,

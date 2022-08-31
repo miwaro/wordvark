@@ -65,12 +65,13 @@ html {
   display: flex;
   justify-content: center;
   margin: 20px auto;
+  max-width: 700px;
   gap: 10px;
 }
 
 .word {
   color: whitesmoke;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 form input[type="text"] {
@@ -167,7 +168,6 @@ table {
   
 th {
   border: 2px solid rgb(59, 59, 188);
-  /* background-color: rgb(59, 59, 188); */
   color: whitesmoke;
   border-radius: 4px;
 }
@@ -211,10 +211,7 @@ td {
 @media screen and (max-width: 768px) {
 
   .added-score {
-    /* animation: fadeIn 2s linear; */
     color: rgb(65, 188, 59);
-    /* font-size: 20px; */
-    /* font-weight: bold; */
   }
 
   .App-header {

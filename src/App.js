@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Timer from './components/Timer';
 import WordStats from './components/WordStats';
 import LoadingSpinner from "./components/DelayedSpinner";
+import WordsDisplay from "./components/WordsDisplay";
 import aardvark from './assets/img/AARD.png';
 import './App.css';
 
@@ -28,8 +29,6 @@ function App() {
   const [isAlreadyUsed, setIsAlreadyUsed] = useState(false);
   const [noStrikeBonusMessage, setNoStrikeBonusMessage] = useState("");
   const [inputClass, setInputClass] = useState("");
-
-  // const [flexDirection, setFlexDirection] = useState("column");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -66,7 +65,6 @@ function App() {
   }, [isEditing]);
 
   useEffect(() => {
-    // setIsAlreadyUsed(false);
     if (!leftInput || testWord === "") return;
     setIsLoading(true);
     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${testWord}/`;
@@ -74,7 +72,6 @@ function App() {
       .then(response => {
 
         if (response.data[0].word === testWord) {
-          setJoinedWords(prev => [...prev, testWord])
           setLeftInput(testWord)
           setStreak(prev => prev + 1)
         }
@@ -108,9 +105,27 @@ function App() {
   }, [gameIsOver])
 
   useEffect(() => {
+    if (streak === 0) return;
+    if (streak === 1) {
+      setJoinedWords(prev => [...prev, [testWord]])
 
-    setLongestStreak(prev => [...prev, streak])
+    } else if (streak > 1) {
+
+      setJoinedWords((prev) => {
+        let lastElement = prev[prev.length - 1];
+        lastElement.push(testWord)
+        return prev.map((word) => {
+          return [
+            ...word,
+          ]
+        })
+      })
+    }
+  }, [streak])
+
+  useEffect(() => {
     if (joinedWords.length === 0 || streak === 0) return;
+    setLongestStreak(prev => [...prev, streak])
     let power = streak - 1
     let newScore = Math.pow(2, power);
     setAddedScore(newScore);
@@ -137,19 +152,16 @@ function App() {
 
     }
 
-    console.log('newRepeats', newRepeats)
 
-    setRightInput(e.target.value)
+    setRightInput([e.target.value])
     setRightInputExists(true)
   }
 
   const onKeyPress = (e) => {
-    console.log('all ready used', isAlreadyUsed)
-
     if (isAlreadyUsed) {
       setInputClass("shake")
     } else setInputClass("");
-    if (gameIsOver || gameIsOver === null || isAlreadyUsed) return;
+    if (gameIsOver || gameIsOver === null || isAlreadyUsed || isLoading) return;
     if (e.which === 13 && rightInput === "") {
       getRandomWord()
       setStreak(0)
@@ -189,7 +201,6 @@ function App() {
     setTestWord(joinedWord.toLowerCase())
     setRightInput("")
     setRightInputExists(false)
-
   }
 
   const rightInputClasses = isAlreadyUsed ? `error-input ${inputClass}` : "right-input"
@@ -197,7 +208,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <span>W<img style={{ transform: 'translate(0, 5px' }} src={aardvark} height="44" width="44" alt="aardvark" />RDVARK</span>
+        <span>W
+          <img style={{ transform: 'translate(0, 5px' }} src={aardvark} height="44" width="44" alt="aardvark" />
+          RDVARK
+        </span>
       </header>
       <div className='hi-score'>HI-SCORE: <span style={{ color: 'white', paddingLeft: '10px' }}> {finalScore}</span></div>
 
@@ -225,7 +239,8 @@ function App() {
           />
           {
             showScore && !isLoading ?
-              <span style={{ position: 'absolute' }} className="added-score">+{addedScore}</span> : <span style={{ visibility: 'hidden' }}></span>
+              <span style={{ position: 'absolute' }} className="added-score">+{addedScore}</span> :
+              <span style={{ visibility: 'hidden' }}></span>
           }
           <button
             className="hidden-btn"
@@ -259,17 +274,21 @@ function App() {
         }
         <div className='score'>SCORE: <span style={{ color: 'white' }}>{score}</span></div>
         {gameIsOver &&
-          <WordStats joinedWords={joinedWords} longestStreak={longestStreak} strikes={strikes} gameIsOver={gameIsOver} />
+          <WordStats
+            joinedWords={joinedWords}
+            longestStreak={longestStreak}
+            strikes={strikes}
+            gameIsOver={gameIsOver} />
 
         }
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           {gameIsOver && joinedWords.length > 0 &&
             <div className='word-container'>
 
-              <div className="word" style={{ fontWeight: 'bold' }}>Words:</div>
+              <div style={{ color: 'rgb(53, 53, 170)', fontWeight: 'bold' }}>Words:</div>
               {
                 joinedWords.map((words) => (
-                  <div className="word" key={uuidv4()}>{words}, </div>
+                  <WordsDisplay key={uuidv4()} words={words} />
                 ))
               }
             </div>
